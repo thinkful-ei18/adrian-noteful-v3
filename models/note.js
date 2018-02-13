@@ -9,3 +9,8 @@ const notesSchema = mongoose.Schema({
   content: {type: String, required: true},
   create: {type: Date, default: Date.now}
 });
+
+Note.create({
+  title: 'Are cats evil?',
+  content: 'Of course!'
+});
