@@ -79,3 +79,26 @@ const Note = require('../models/note');
 //   });
 
 // ************* Add a note **********************
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .create({
+//         title: 'Can cats run for president?',
+//         content: 'Of course!',
+//       })
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
+
+// ************* Update a note **********************
