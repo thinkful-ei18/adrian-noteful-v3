@@ -38,31 +38,31 @@ const Note = require('../models/note');
 //   });
 
 // ************* Get all notes **********************
-// mongoose.connect(MONGODB_URI)
-//   .then (() => {
-//     return Note
-//       .find()
-//       .then(result => {
-//         console.log(result);
-//       });
-//   })
-//   .then (()=> {
-//     return mongoose.disconnect()
-//       .then (() => {
-//         console.info('Disconnected');
-//       });
-//   })
-//   .catch (err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error(err);
-//   });
+mongoose.connect(MONGODB_URI)
+  .then (() => {
+    return Note
+      .find()
+      .then(result => {
+        console.log(result);
+      });
+  })
+  .then (()=> {
+    return mongoose.disconnect()
+      .then (() => {
+        console.info('Disconnected');
+      });
+  })
+  .catch (err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
 
 
 // ************* Get note by ID **********************
 // mongoose.connect(MONGODB_URI)
 //   .then (() => {
 //     return Note
-//       .findById('000000000000000000000006')
+//       .findById('000000000000000000000007')
 //       .then(result => {
 //         console.log(result);
 //       });
@@ -102,3 +102,21 @@ const Note = require('../models/note');
 //   });
 
 // ************* Update a note **********************
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .findByIdAndUpdate('000000000000000000000007', {$set: {title: 'CATS AND VIDEO GAMES', content: 'GO GREAT TOGETHER!'}}, {new: true})
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
