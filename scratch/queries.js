@@ -38,24 +38,24 @@ const Note = require('../models/note');
 //   });
 
 // ************* Get all notes **********************
-mongoose.connect(MONGODB_URI)
-  .then (() => {
-    return Note
-      .find()
-      .then(result => {
-        console.log(result);
-      });
-  })
-  .then (()=> {
-    return mongoose.disconnect()
-      .then (() => {
-        console.info('Disconnected');
-      });
-  })
-  .catch (err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .find()
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
 
 
 // ************* Get note by ID **********************
