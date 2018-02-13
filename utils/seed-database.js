@@ -24,7 +24,7 @@ mongoose.connect(MONGODB_URI)
   .then (() => {
     return mongoose.disconnect()
       .then (() => {
-        console.info(`Disconnected`);
+        console.info('Disconnected');
       });
   })
   .catch(err => {
