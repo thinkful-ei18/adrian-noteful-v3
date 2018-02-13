@@ -8,42 +8,43 @@ const Note = require('../models/note');
 
 
 // Find by ID
-mongoose.connect(MONGODB_URI)
-  .then (() => {
-    const searchTerm = 'lady gaga';
-    let filter = {};
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     const searchTerm = 'lady gaga';
+//     let filter = {};
 
-    if (searchTerm) {
-      const re = new RegExp(searchTerm, 'i');
-      filter.title ={$regex: re};
-    }
+//     if (searchTerm) {
+//       const re = new RegExp(searchTerm, 'i');
+//       filter.title ={$regex: re};
+//     }
 
-    return Note.find(filter)
-      .select('title created')
-      .sort('created')
-      .then(results => {
-        console.log(results);
-      })
-      .catch(console.error);
-  })
-  .then (()=> {
-    return mongoose.disconnect()
-      .then (() => {
-        console.info('Disconnected');
-      });
-  })
-  .catch (err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+//     return Note.find(filter)
+//       .select('title created')
+//       .sort('created')
+//       .then(results => {
+//         console.log(results);
+//       })
+//       .catch(console.error);
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
 
 //Get all notes!
 mongoose.connect(MONGODB_URI)
   .then (() => {
-
-
-
-
+    return Note
+      .find()
+      .then(result => {
+        console.log(result);
+      });
   })
   .then (()=> {
     return mongoose.disconnect()

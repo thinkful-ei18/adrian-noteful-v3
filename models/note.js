@@ -18,9 +18,9 @@ notesSchema.set('toObject', {
 
 const Note = mongoose.model('Note', notesSchema);
 
-Note.create({
-  title: 'Are cats evil?',
-  content: 'Of course!'
-});
+// Note.create({
+//   title: 'Are cats evil?',
+//   content: 'Of course!'
+// });
 
 module.exports = Note;
