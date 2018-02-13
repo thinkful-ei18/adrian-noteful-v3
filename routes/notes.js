@@ -8,7 +8,6 @@ const Note = require('../models/note');
 
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
-
   // console.log('Get All Notes');
   return Note
     .find()
@@ -18,15 +17,22 @@ router.get('/notes', (req, res, next) => {
     .catch(err => {
       next(err);
     });
-
 });
 
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/notes/:id', (req, res, next) => {
 
-  console.log('Get a Note');
-  res.json({ id: 2 });
-
+  return Note
+    .findById(req.params.id)
+    .then(result => {
+      // Return an OBJECT!!!
+      console.log('Object:', result);
+      res.status(200).json(result);
+    })
+    .catch(() => {
+      // anonymous function to catch 404 errors!
+      next();
+    });
 });
 
 /* ========== POST/CREATE AN ITEM ========== */
