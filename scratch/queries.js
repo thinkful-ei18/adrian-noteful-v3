@@ -6,6 +6,8 @@ const {MONGODB_URI} = require('../config');
 
 const Note = require('../models/note');
 
+
+// Find by ID
 mongoose.connect(MONGODB_URI)
   .then (() => {
     const searchTerm = 'lady gaga';
@@ -35,3 +37,21 @@ mongoose.connect(MONGODB_URI)
     console.error(err);
   });
 
+//Get all notes!
+mongoose.connect(MONGODB_URI)
+  .then (() => {
+
+
+
+
+  })
+  .then (()=> {
+    return mongoose.disconnect()
+      .then (() => {
+        console.info('Disconnected');
+      });
+  })
+  .catch (err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
