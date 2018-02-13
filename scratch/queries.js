@@ -120,3 +120,23 @@ mongoose.connect(MONGODB_URI)
 //     console.error(`ERROR: ${err.message}`);
 //     console.error(err);
 //   });
+
+// ************* delete a note **********************
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .findByIdAndRemove('000000000000000000000007')
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
