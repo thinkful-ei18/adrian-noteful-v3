@@ -37,22 +37,45 @@ const Note = require('../models/note');
 //     console.error(err);
 //   });
 
-//Get all notes!
-mongoose.connect(MONGODB_URI)
-  .then (() => {
-    return Note
-      .find()
-      .then(result => {
-        console.log(result);
-      });
-  })
-  .then (()=> {
-    return mongoose.disconnect()
-      .then (() => {
-        console.info('Disconnected');
-      });
-  })
-  .catch (err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+// ************* Get all notes **********************
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .find()
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
+
+
+// ************* Get note by ID **********************
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .findById('000000000000000000000006')
+//       .then(result => {
+//         console.log(result);
+//       });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
+
+// ************* Add a note **********************
