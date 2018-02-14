@@ -14,9 +14,7 @@ router.get('/notes', (req, res, next) => {
     .then(results => {
       res.status(200).json(results);
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(next);
 });
 
 /* ========== GET/READ A SINGLE ITEM ========== */
@@ -29,10 +27,7 @@ router.get('/notes/:id', (req, res, next) => {
       // console.log('Object:', result);
       res.status(200).json(result);
     })
-    .catch(() => {
-      // anonymous function to catch 404 errors!
-      next();
-    });
+    .catch(next);
 });
 
 /* ========== POST/CREATE AN ITEM ========== */
@@ -49,32 +44,41 @@ router.post('/notes', (req, res, next) => {
     .then (result => {
       res.status(201).json(result);
     })
-    .catch(() => {
-      next();
-    });
+    .catch(next);
 
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/notes/:id', (req, res, next) => {
-  const toUpdate = {};
-  const updateableFields = ['title', 'content'];
+  const { id } = req.params;
+  const { title, content } = req.body;
 
-  updateableFields.forEach(field => {
-    if (field in req.body) {
-      toUpdate[field] = req.body[field];
-    }
-  });
+  /***** Never trust users - validate input *****/
+  if (!title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
 
-  Note
-    .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-    .then(() => {
-      res.status(204).end();
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   const err = new Error('The `id` is not valid');
+  //   err.status = 400;
+  //   return next(err);
+  // }
+
+  const updateItem = { title, content };
+  const options = { new: true };
+
+  Note.findByIdAndUpdate(id, updateItem, options)
+    .select('id title content')
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        next();
+      }
     })
-    .catch(() => {
-      next();
-    });
-
+    .catch(next);
 });
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
@@ -85,9 +89,7 @@ router.delete('/notes/:id', (req, res, next) => {
     .then (() => {
       res.status(204).end();
     })
-    .catch(() => {
-      next();
-    });
+    .catch(next);
 });
 
 module.exports = router;
