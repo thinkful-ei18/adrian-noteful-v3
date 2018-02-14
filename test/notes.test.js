@@ -135,9 +135,12 @@ describe('hooks', function () {
   }); // END OF POST NOTE TESTS
 
 
+  /*         MODIFY A NOTE           */
+
+
   /*         DELETE A NOTE           */
   describe('DELETE /v3/notes', function () {
-    it.only('should permanently delete an item', function () {
+    it('should permanently delete an item', function () {
       return chai.request(app)
         .delete('/v3/notes/000000000000000000000001')
         .then(function (res) {
@@ -146,6 +149,22 @@ describe('hooks', function () {
         })
         .then(data => {
           expect(data).to.be.null;
+        });
+    });
+
+    it('should respond with a 400 for improperly formatted id', function () {
+      const badId = '99-99-99';
+      const spy = chai.spy();
+      return chai.request(app)
+        .delete(`/v3/notes/${badId}`)
+        .then(spy)
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `id` is not valid');
         });
     });
   });
