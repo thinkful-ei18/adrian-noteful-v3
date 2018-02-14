@@ -49,8 +49,8 @@ router.post('/notes', (req, res, next) => {
     .then (result => {
       res.status(201).json(result);
     })
-    .catch((err) => {
-      next(err);
+    .catch(() => {
+      next();
     });
 
 });
@@ -59,7 +59,6 @@ router.post('/notes', (req, res, next) => {
 router.put('/notes/:id', (req, res, next) => {
   const toUpdate = {};
   const updateableFields = ['title', 'content'];
-  req.params.searchTerm = req.params.searchTerm;
 
   updateableFields.forEach(field => {
     if (field in req.body) {
