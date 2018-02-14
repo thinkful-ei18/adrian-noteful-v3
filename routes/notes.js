@@ -9,12 +9,30 @@ const Note = require('../models/note');
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
   // console.log('Get All Notes');
-  return Note
-    .find()
+  const searchTerm = req.query.searchTerm;
+  let filter = {};
+
+  if (searchTerm) {
+    const re = new RegExp(searchTerm, 'i');
+    filter.title = { $regex: re };
+  }
+
+  return Note.find(filter)
+    .select('title created')
+    .sort('created')
     .then(results => {
-      res.status(200).json(results);
+      res.json(results);
     })
-    .catch(next);
+    .catch(err => {
+      next(err);
+    });
+
+  // return Note
+  //   .find()
+  //   .then(results => {
+  //     res.status(200).json(results);
+  //   })
+  //   .catch(next);
 });
 
 /* ========== GET/READ A SINGLE ITEM ========== */
@@ -25,7 +43,14 @@ router.get('/notes/:id', (req, res, next) => {
     .then(result => {
       // Return an OBJECT!!!
       // console.log('Object:', result);
-      res.status(200).json(result);
+      if (!result) {
+        next();
+        // res.status(404).send('ID doesn\'t exist'.);
+        // console.error('Note doesn\'t exist');
+      } else {
+        res.status(200).json(result);
+      }
+
     })
     .catch(next);
 });
