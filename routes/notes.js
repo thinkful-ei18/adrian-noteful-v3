@@ -38,8 +38,20 @@ router.get('/notes/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/notes', (req, res, next) => {
 
-  console.log('Create a Note');
-  res.location('path/to/new/document').status(201).json({ id: 2 });
+// const noteTitle = req.params.title;
+// const noteContent = req.params.content;
+
+  Note
+    .create({
+      title: req.body.title,
+      content: req.body.content
+    })
+    .then (result => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      next(err);
+    });
 
 });
 
