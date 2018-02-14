@@ -21,22 +21,22 @@ const seedData = require('../db/seed/notes');
 describe('hooks', function () {
 
   before(function () {
-
-  });
-
-  after(function () {
-
+    return mongoose.connect(TEST_MONGODB_URI, { autoIndex: false }); // disable indexing for tests!
   });
 
   beforeEach(function() {
-
+    return Note.insertMany(seedData)
+      .then(() => Note.ensureIndexes());
   });
 
   afterEach(function() {
-
+    return mongoose.connection.db.dropDatabase();
   });
 
-/*         ROUTER TESTS            */
+  after(function () {
+    return mongoose.disconnect();
+  });
 
+  /*         ROUTER TESTS            */
 
 });
