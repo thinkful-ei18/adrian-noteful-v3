@@ -72,7 +72,6 @@ router.put('/notes/:id', (req, res, next) => {
       res.status(204).end();
     })
     .catch(() => {
-      // anonymous function to catch 404 errors!
       next();
     });
 
@@ -81,9 +80,14 @@ router.put('/notes/:id', (req, res, next) => {
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/notes/:id', (req, res, next) => {
 
-  console.log('Delete a Note');
-  res.status(204).end();
-
+  Note
+    .findByIdAndRemove(req.params.id)
+    .then (() => {
+      res.status(204).end();
+    })
+    .catch(() => {
+      next();
+    });
 });
 
 module.exports = router;
