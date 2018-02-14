@@ -26,7 +26,7 @@ router.get('/notes/:id', (req, res, next) => {
     .findById(req.params.id)
     .then(result => {
       // Return an OBJECT!!!
-      console.log('Object:', result);
+      // console.log('Object:', result);
       res.status(200).json(result);
     })
     .catch(() => {
@@ -45,9 +45,24 @@ router.post('/notes', (req, res, next) => {
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/notes/:id', (req, res, next) => {
+  const toUpdate = {};
+  const updateableFields = ['title', 'content'];
 
-  console.log('Update a Note');
-  res.json({ id: 2 });
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Note
+    .findByIdAndUpdate(req.params.id, {$set: toUpdate})
+    .then(result => {
+      res.status(204).end();
+    })
+    .catch(() => {
+      // anonymous function to catch 404 errors!
+      next();
+    });
 
 });
 
