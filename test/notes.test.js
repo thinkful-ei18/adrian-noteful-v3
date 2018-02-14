@@ -39,6 +39,12 @@ describe('hooks', function () {
 
   /*         ROUTER TESTS            */
 
+  // GET ALL NOTES
+  // Expect: an array of objects, 200 status, json object, compare API results to database results
+  // Edge case: test a bad path, expect a 404 error
 
+  describe('GET /v3/notes/:id', function () {
+
+  });
 
 });
