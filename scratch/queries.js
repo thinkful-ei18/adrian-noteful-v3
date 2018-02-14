@@ -102,39 +102,39 @@ const Note = require('../models/note');
 //   });
 
 // ************* Update a note **********************
-mongoose.connect(MONGODB_URI)
-  .then (() => {
-    return Note
-      .findOne({_id: '000000000000000000000007'}, {id: 1, title: 1, content: 1})
-      .then (foundNote => {
-        console.log(foundNote);
-        return foundNote;
-      })
-      .then(note => {
-        return note.update({$set: {title: 'about cats', content: 'cats are fun'}});
-      })
-      .then(result => {
-        return Note
-          .findOne({_id: '000000000000000000000007'}, {id: 1, title: 1, content: 1});
-      })
-      .then (updatedNote => {
-        console.log(updatedNote);
-      });
-    // .findByIdAndUpdate('000000000000000000000007', {$set: {title: 'CATS AND VIDEO GAMES', content: 'GO GREAT TOGETHER!'}}, {new: true})
-    // .then(result => {
-    //   console.log(result);
-    // });
-  })
-  .then (()=> {
-    return mongoose.disconnect()
-      .then (() => {
-        console.info('Disconnected');
-      });
-  })
-  .catch (err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+// mongoose.connect(MONGODB_URI)
+//   .then (() => {
+//     return Note
+//       .findOne({_id: '000000000000000000000007'}, {id: 1, title: 1, content: 1})
+//       .then (foundNote => {
+//         console.log(foundNote);
+//         return foundNote;
+//       })
+//       .then(note => {
+//         return note.update({$set: {title: 'about cats', content: 'cats are fun'}});
+//       })
+//       .then(result => {
+//         return Note
+//           .findOne({_id: '000000000000000000000007'}, {id: 1, title: 1, content: 1});
+//       })
+//       .then (updatedNote => {
+//         console.log(updatedNote);
+//       });
+//     // .findByIdAndUpdate('000000000000000000000007', {$set: {title: 'CATS AND VIDEO GAMES', content: 'GO GREAT TOGETHER!'}}, {new: true})
+//     // .then(result => {
+//     //   console.log(result);
+//     // });
+//   })
+//   .then (()=> {
+//     return mongoose.disconnect()
+//       .then (() => {
+//         console.info('Disconnected');
+//       });
+//   })
+//   .catch (err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
 
 // ************* delete a note **********************
 // mongoose.connect(MONGODB_URI)
@@ -165,3 +165,25 @@ mongoose.connect(MONGODB_URI)
 //       console.log(note);
 //       return note.remove();
 //     });
+
+// ************* delete a note **********************
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    return Note.find(
+      { $text: { $search: '5' } },
+      { score: { $meta: 'textScore' } })
+      .sort({ score: { $meta: 'textScore' } })
+      .then(results => {
+        console.log(results);
+      });
+  })
+  .then(() => {
+    return mongoose.disconnect()
+      .then(() => {
+        console.info('Disconnected');
+      });
+  })
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
