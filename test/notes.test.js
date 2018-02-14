@@ -135,5 +135,20 @@ describe('hooks', function () {
   }); // END OF POST NOTE TESTS
 
 
+  /*         DELETE A NOTE           */
+  describe('DELETE /v3/notes', function () {
+    it.only('should permanently delete an item', function () {
+      return chai.request(app)
+        .delete('/v3/notes/000000000000000000000001')
+        .then(function (res) {
+          expect(res).to.have.status(204);
+          return Note.findById('000000000000000000000001');
+        })
+        .then(data => {
+          expect(data).to.be.null;
+        });
+    });
+  });
+
 
 }); // END OF MOCHA HOOK
