@@ -68,7 +68,7 @@ router.put('/notes/:id', (req, res, next) => {
 
   Note
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-    .then(result => {
+    .then(() => {
       res.status(204).end();
     })
     .catch(() => {
