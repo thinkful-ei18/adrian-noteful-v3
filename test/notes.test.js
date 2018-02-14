@@ -17,4 +17,23 @@ const seedData = require('../db/seed/notes');
 
 // console.log(seedData);
 
+/*         MOCHA HOOKS            */
+describe('hooks', function () {
 
+  before(function () {
+
+  });
+
+  after(function () {
+
+  });
+
+  beforeEach(function() {
+
+  });
+
+  afterEach(function() {
+
+  });
+
+});
