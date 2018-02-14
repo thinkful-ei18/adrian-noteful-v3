@@ -25,9 +25,7 @@ router.get('/notes', (req, res, next) => {
     .then(results => {
       res.json(results);
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(next);
 
   // return Note
   //   .find()
@@ -51,15 +49,7 @@ router.get('/notes/:id', (req, res, next) => {
     .findById(req.params.id)
     .select('id title content')
     .then(result => {
-      // Return an OBJECT!!!
-      // console.log('Object:', result);
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        next();
-        // res.status(404).send('ID doesn\'t exist'.);
-        // console.error('Note doesn\'t exist');
-      }
+      res.status(200).json(result);
     })
     .catch(next);
 });
