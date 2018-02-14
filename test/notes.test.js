@@ -136,7 +136,22 @@ describe('hooks', function () {
 
 
   /*         MODIFY A NOTE           */
+  describe('PUT /v3/notes', function () {
+    it('should modify title and content of a note', function () {
 
+      const { id } = '000000000000000000000000';
+      const { title, content } = {title: 'Brand new day!', content: 'Brand new cat!'};
+
+      const updateItem = { title, content };
+      const options = { new: true };
+
+      return Note.findByIdAndUpdate(id, updateItem, options)
+        .select('id title content')
+        .then(() => {
+          // Do stuff!
+        });
+    });
+  });
 
   /*         DELETE A NOTE           */
   describe('DELETE /v3/notes', function () {

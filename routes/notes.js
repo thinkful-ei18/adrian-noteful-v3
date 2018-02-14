@@ -92,6 +92,7 @@ router.put('/notes/:id', (req, res, next) => {
     .select('id title content')
     .then(result => {
       if (result) {
+        // console.log(result);
         res.json(result);
       } else {
         next();
