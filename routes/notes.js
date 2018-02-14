@@ -6,6 +6,8 @@ const router = express.Router();
 
 const Note = require('../models/note');
 
+const mongoose = require('mongoose');
+
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
   // console.log('Get All Notes');
@@ -38,19 +40,26 @@ router.get('/notes', (req, res, next) => {
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/notes/:id', (req, res, next) => {
 
+// Validate BEFORE we try to make a request!
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
+
   return Note
     .findById(req.params.id)
+    .select('id title content')
     .then(result => {
       // Return an OBJECT!!!
       // console.log('Object:', result);
-      if (!result) {
+      if (result) {
+        res.status(200).json(result);
+      } else {
         next();
         // res.status(404).send('ID doesn\'t exist'.);
         // console.error('Note doesn\'t exist');
-      } else {
-        res.status(200).json(result);
       }
-
     })
     .catch(next);
 });
@@ -66,8 +75,9 @@ router.post('/notes', (req, res, next) => {
       title: req.body.title,
       content: req.body.content
     })
+    // .select('id title content id')
     .then (result => {
-      res.status(201).json(result);
+      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
     .catch(next);
 
