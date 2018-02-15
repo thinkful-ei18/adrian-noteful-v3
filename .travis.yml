@@ -3,7 +3,7 @@ node_js: node
 services:
   - mongodb
   env:
-  - NODE_ENV=TEST_MONGODB_URI
+  - NODE_ENV=test
 
 before_script:
   - sleep 15
