@@ -46,6 +46,12 @@ router.get('/folders/:id', (req, res, next) => {
 });
 
 router.post('/folders', (req, res, next) => {
+  if (!name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
   Folder
     .create({
       name: req.body.name
@@ -53,7 +59,13 @@ router.post('/folders', (req, res, next) => {
     .then(result => {
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
-    .catch(next);
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The `folder` name already exists');
+        err.status = 400;
+      }
+      next(err);
+    });
 });
 
 router.put('/folders/:id', (req, res, next) => {
@@ -68,6 +80,12 @@ router.put('/folders/:id', (req, res, next) => {
     return next(err);
   }
 
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
+
   const updateItem = { name };
   const options = { new: true };
 
@@ -77,8 +95,13 @@ router.put('/folders/:id', (req, res, next) => {
     .then(result => {
       res.json(result);
     })
-    .catch(next);
-
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The `folder` name already exists');
+        err.status = 400;
+      }
+      next(err);
+    });
 });
 
 router.delete('/folders/:id', (req, res, next) => {
