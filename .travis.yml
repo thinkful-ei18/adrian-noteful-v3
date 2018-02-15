@@ -2,14 +2,13 @@ language: node_js
 node_js: node
 services:
   - mongodb
+  env:
+  - NODE_ENV=test
 
 before_script:
   - sleep 15
   - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
-# language: node_js
-# node_js: node
-# env:
-#   - NODE_ENV=test
+
 services:
   - mongodb
 deploy:
