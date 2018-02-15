@@ -11,17 +11,30 @@ const mongoose = require('mongoose');
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
   // console.log('Get All Notes');
-  const searchTerm = req.query.searchTerm;
-  let filter = {};
+
+  const { searchTerm, folderId } = req.query; //
+  // console.log(searchTerm, folderId);
+  // const folderId = req.query.folderId;
+
+  let filter = {}; // 1st find argument; Criteria for filtering our results; We use the searchTerm query string
+  let projection = {}; // 2nd find argument; Criteria for what we want to return
+  let sort = 'created'; // We want to sort by the note's created date.
 
   if (searchTerm) {
-    const re = new RegExp(searchTerm, 'i');
-    filter.title = { $regex: re };
+    filter.$text = {$search: searchTerm, $language: 'none'}; // $text: $search = Options for our $text search
+    projection.score = {$meta: 'textScore'}; // text search queries will compute a relevance score for each document that specifies how well a document matches the query
+    sort = projection;
   }
 
-  return Note.find(filter)
+  if (folderId) {
+    filter.folderId = folderId;
+  }
+
+  // Note.find({WHAT YOU'RE LOOKING FOR}, {WHAT TO RETURN});
+
+  return Note.find(filter, projection)
     .select('id title content folderId created')
-    .sort('created')
+    .sort(sort)
     .then(results => {
       res.json(results);
     })
@@ -47,7 +60,7 @@ router.get('/notes/:id', (req, res, next) => {
 
   return Note
     .findById(req.params.id)
-    .select('id title content folderId')
+    .select('id title content folderId created')
     .then(result => {
       res.status(200).json(result);
     })
