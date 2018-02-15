@@ -13,7 +13,8 @@ router.get('/folders', (req, res, next) => {
 
   return Folder
     .find()
-    .select('name')
+    .select('id name')
+    .sort('name')
     .then(results => {
       res.json(results);
     })
@@ -84,7 +85,7 @@ router.delete('/folders/:id', (req, res, next) => {
 
   Folder
     .findByIdAndRemove(req.params.id)
-    .then(res => {
+    .then(() => {
       res.status(204).end();
     })
     .catch(next);
