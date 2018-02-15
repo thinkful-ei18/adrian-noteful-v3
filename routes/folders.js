@@ -34,7 +34,13 @@ router.get('/folders/:id', (req, res, next) => {
     .findById(req.params.id)
     .select('id name')
     .then(result => {
-      res.json(result);
+      if (!result) {
+        const error = new Error('`id` not found!');
+        error.status = 404;
+        return next(error);
+      } else {
+        res.json(result);
+      }
     })
     .catch(next);
 });
