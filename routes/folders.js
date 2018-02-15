@@ -112,10 +112,20 @@ router.delete('/folders/:id', (req, res, next) => {
     return next(error);
   }
 
-  Folder
-    .findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.status(204).end();
+  const deleteFolder = Folder.findByIdAndRemove({_id:req.params.id});
+  // const deleteNotes = Note.deleteMany({folderId: req.params.id});
+  const resetFolderId = Note.update({folderId: req.params.id}, {$set: {folderId: null}});
+
+
+  Promise.all([deleteFolder, resetFolderId])
+    .then(folderResult => {
+      // console.log(folderResult);
+      const result = folderResult[0];
+      if(result){
+        res.status(204).end();
+      } else {
+        next();
+      }
     })
     .catch(next);
 

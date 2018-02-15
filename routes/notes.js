@@ -20,7 +20,7 @@ router.get('/notes', (req, res, next) => {
   }
 
   return Note.find(filter)
-    .select('title created')
+    .select('id title content folderId created')
     .sort('created')
     .then(results => {
       res.json(results);
@@ -47,7 +47,7 @@ router.get('/notes/:id', (req, res, next) => {
 
   return Note
     .findById(req.params.id)
-    .select('id title content')
+    .select('id title content folderId')
     .then(result => {
       res.status(200).json(result);
     })
@@ -89,7 +89,7 @@ router.put('/notes/:id', (req, res, next) => {
   const options = { new: true };
 
   Note.findByIdAndUpdate(id, updateItem, options)
-    .select('id title content')
+    .select('id title content folderId')
     .then(result => {
       res.json(result);
     })
