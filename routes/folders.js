@@ -38,6 +38,17 @@ router.get('/folders/:id', (req, res, next) => {
     .catch(next);
 });
 
+router.post('/folders', (req, res, next) => {
+  Folder
+    .create({
+      name: req.body.name
+    })
+    .then(result => {
+      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
+    })
+    .catch(next);
+});
+
 
 
 
