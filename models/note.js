@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const notesSchema = new mongoose.Schema({
   title: {type: String, required: true, index: true},
   content: {type: String, required: true, index: true},
-  create: {type: Date, default: Date.now}
+  create: {type: Date, default: Date.now},
+  folderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Folder' }
 });
 
 notesSchema.index({ title: 'text', content: 'text' });
