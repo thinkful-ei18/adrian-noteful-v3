@@ -21,6 +21,22 @@ router.get('/folders', (req, res, next) => {
 
 });
 
+router.get('/folders/:id', (req, res, next) => {
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
+
+  return Folder
+    .findById(req.params.id)
+    .select('name')
+    .then(result => {
+      res.json(result);
+    })
+    .catch(next);
+});
 
 
 
