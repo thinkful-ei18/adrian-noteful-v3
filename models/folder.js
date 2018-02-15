@@ -3,9 +3,8 @@
 const mongoose = require('mongoose');
 
 const foldersSchema = new mongoose.Schema({
-  name: {type: String, required: true, unique : true, dropDups: true}
+  name: {type: String, required: true, index: true, unique: true, dropDups: true}
 });
-
 
 foldersSchema.index({name: 'text'});
 
