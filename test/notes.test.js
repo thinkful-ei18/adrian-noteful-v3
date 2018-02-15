@@ -160,9 +160,19 @@ describe('hooks', function () {
           expect(body.title).to.equal(data.title);
           expect(body.content).to.equal(data.content);
         });
+    });
+
+
+    it('should validate input for a note title', function () {
+
+
+
+
 
     });
-  });
+
+
+  }); // end of PUT
 
   /*         DELETE A NOTE           */
   describe('DELETE /v3/notes', function () {
