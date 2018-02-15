@@ -89,15 +89,16 @@ describe('hooks', function () {
     it('should respond with a 400 for improperly formatted id', function () {
       const badId = '99-99-99';
       const spy = chai.spy();
-      return chai.request(app).get(`/v3/notes/${badId}`)
+      return chai.request(app)
+        .get(`/v3/notes/${badId}`)
         .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
         .catch(err => {
           const res = err.response;
           expect(res).to.have.status(400);
           expect(res.body.message).to.eq('The `id` is not valid');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
         });
     });
 
