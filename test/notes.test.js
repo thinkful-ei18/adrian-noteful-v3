@@ -165,6 +165,31 @@ describe('hooks', function () {
 
     it('should validate input for a note title', function () {
 
+      const id = '000000000000000000000000';
+      const updateItem = {content: 'Brand new cat!'};
+      const options = { new: true };
+      let body;
+
+      return chai.request(app)
+        .put(`/v3/notes/${id}`)
+        .send(updateItem)
+        .then(function (res) {
+          body = res.body;
+          expect(res).to.be.null;
+          expect.res.body.should.have.property('error');
+          return Note.findByIdAndUpdate(id, updateItem, options);
+        })
+        .then(data => {
+          body = data.body;
+          expect(data).to.be.null;
+          expect.data.body.should.have.property('error');
+        })
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.property('error');
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('Missing `title` in request body');
+        });
 
 
 
