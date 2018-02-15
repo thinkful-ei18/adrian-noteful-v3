@@ -1,9 +1,15 @@
 language: node_js
 node_js: node
-env:
-  - NODE_ENV=test
+services:
+  - mongodb
+
+
+# language: node_js
+# node_js: node
+# env:
+#   - NODE_ENV=test
 # services:
-#   - [DATABASE-TYPE]  
+#   - [DATABASE-TYPE]
 # deploy:
 #   provider: heroku
 #   api_key:
