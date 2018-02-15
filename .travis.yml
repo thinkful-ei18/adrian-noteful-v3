@@ -10,12 +10,12 @@ before_script:
 # node_js: node
 # env:
 #   - NODE_ENV=test
-# services:
-#   - [DATABASE-TYPE]
-# deploy:
-#   provider: heroku
-#   api_key:
-#     secure: [YOUR-API-KEY]
-#   app: [YOUR-APP-NAME]
-#   on:
-#     repo: [YOUR-APP-REPO]
+services:
+  - mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: 4e417acd-edce-4507-8e4b-79a96b6a75fc
+  app: https://adrian-noteful-v3.herokuapp.com/
+  on:
+    repo:  https://git.heroku.com/adrian-noteful-v3.git
