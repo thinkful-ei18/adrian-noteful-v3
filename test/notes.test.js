@@ -140,17 +140,22 @@ describe('hooks', function () {
     it.only('should modify title and content of a note', function () {
 
       const id = '000000000000000000000000';
-      // const { title, content } = {title: 'Brand new day!', content: 'Brand new cat!'};
-
       const updateItem = {title: 'Brand new day!', content: 'Brand new cat!'};
       const options = { new: true };
+      let body;
 
       return chai.request(app)
         .put(`/v3/notes/${id}`)
         .send(updateItem)
         .then(function (res) {
+          body = res.body;
           expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(body).to.be.a('object');
+          expect(body).to.include.keys('id', 'title', 'content');
+          return Note.findByIdAndUpdate(id, updateItem, options);
         });
+      // .then();
 
     });
   });
