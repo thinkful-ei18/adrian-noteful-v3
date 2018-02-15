@@ -31,7 +31,7 @@ router.get('/folders/:id', (req, res, next) => {
 
   return Folder
     .findById(req.params.id)
-    .select('name')
+    .select('id name')
     .then(result => {
       res.json(result);
     })
@@ -49,8 +49,34 @@ router.post('/folders', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/folders/:id', (req, res, next) => {
 
+  const { id } = req.params;
+  const { name } = req.body;
 
+  /***** Never trust users - validate input *****/
+  if (!name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  const updateItem = { name };
+  const options = { new: true };
+
+  Folder
+    .findByIdAndUpdate(id, updateItem, options)
+    .select('id name')
+    .then(result => {
+      res.json(result);
+    })
+    .catch(next);
+
+});
+
+router.delete('', (req, res, next) => {
+
+});
 
 
 
