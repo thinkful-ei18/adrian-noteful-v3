@@ -76,9 +76,10 @@ router.post('/notes', (req, res, next) => {
   Note
     .create({
       title: req.body.title,
-      content: req.body.content
+      content: req.body.content,
+      folderId: req.body.folderId
     })
-    // .select('id title content id')
+    // .select('id title content folderId created')
     .then (result => {
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
