@@ -137,7 +137,7 @@ describe('hooks', function () {
 
   /*         MODIFY A NOTE           */
   describe('PUT /v3/notes', function () {
-    it.only('should modify title and content of a note', function () {
+    it('should modify title and content of a note', function () {
 
       const id = '000000000000000000000000';
       const updateItem = {title: 'Brand new day!', content: 'Brand new cat!'};
@@ -154,8 +154,12 @@ describe('hooks', function () {
           expect(body).to.be.a('object');
           expect(body).to.include.keys('id', 'title', 'content');
           return Note.findByIdAndUpdate(id, updateItem, options);
+        })
+        .then(data => {
+          expect(body.id).to.equal(data.id);
+          expect(body.title).to.equal(data.title);
+          expect(body.content).to.equal(data.content);
         });
-      // .then();
 
     });
   });
