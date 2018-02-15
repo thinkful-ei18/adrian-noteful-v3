@@ -137,19 +137,21 @@ describe('hooks', function () {
 
   /*         MODIFY A NOTE           */
   describe('PUT /v3/notes', function () {
-    it('should modify title and content of a note', function () {
+    it.only('should modify title and content of a note', function () {
 
-      const { id } = '000000000000000000000000';
-      const { title, content } = {title: 'Brand new day!', content: 'Brand new cat!'};
+      const id = '000000000000000000000000';
+      // const { title, content } = {title: 'Brand new day!', content: 'Brand new cat!'};
 
-      const updateItem = { title, content };
+      const updateItem = {title: 'Brand new day!', content: 'Brand new cat!'};
       const options = { new: true };
 
-      return Note.findByIdAndUpdate(id, updateItem, options)
-        .select('id title content')
-        .then(() => {
-          // Do stuff!
+      return chai.request(app)
+        .put(`/v3/notes/${id}`)
+        .send(updateItem)
+        .then(function (res) {
+          expect(res).to.have.status(200);
         });
+
     });
   });
 
@@ -182,7 +184,8 @@ describe('hooks', function () {
           expect(res.body.message).to.eq('The `id` is not valid');
         });
     });
-  });
+
+  }); // END OF DELETE
 
 
 }); // END OF MOCHA HOOK
