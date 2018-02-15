@@ -74,7 +74,20 @@ router.put('/folders/:id', (req, res, next) => {
 
 });
 
-router.delete('', (req, res, next) => {
+router.delete('/folders/:id', (req, res, next) => {
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
+
+  Folder
+    .findByIdAndRemove(req.params.id)
+    .then(res => {
+      res.status(204).end();
+    })
+    .catch(next);
 
 });
 
