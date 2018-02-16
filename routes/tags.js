@@ -63,57 +63,43 @@ router.post('/tags', function (req, res, next) {
       }
       next(err);
     });
+});
 
-  router.put('/tags/:id', function (req, res, next) {
+router.put('/tags/:id', function (req, res, next) {
+  const { id } = req.params;
+  const { name } = req.body;
 
-    if (!name) {
-      const err = new Error('Missing `name` in request body');
-      err.status = 400;
-      return next(err);
-    }
+  if (!name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
 
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const error = new Error('The `id` is not valid');
-      error.status = 400;
-      return next(error);
-    }
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
 
-    const { id } = req.params;
-    const { name } = req.body;
+  const updateTag = { name };
+  const options = { new: true };
 
-    /***** Never trust users - validate input *****/
-    if (!name) {
-      const err = new Error('Missing `name` in request body');
-      err.status = 400;
-      return next(err);
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const error = new Error('The `id` is not valid');
-      error.status = 400;
-      return next(error);
-    }
-
-    const updateTag = { name };
-    const options = { new: true };
-
-    Tag
-      .findByIdAndUpdate(id, updateTag, options)
-      .select('id name')
-      .then(result => {
-        res.json(result);
-      })
-      .catch(err => {
-        if (err.code === 11000) {
-          err = new Error('The `tag` name already exists');
-          err.status = 400;
-        }
-        next(err);
-      });
-
-  });
+  Tag
+    .findByIdAndUpdate(id, updateTag, options)
+    .select('id name')
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The `tag` name already exists');
+        err.status = 400;
+      }
+      next(err);
+    });
 
 });
+
 
 
 
