@@ -80,11 +80,22 @@ router.post('/notes', (req, res, next) => {
 // const noteTitle = req.params.title;
 // const noteContent = req.params.content;
 
+  const { tags } = req.body;
+
+  tags.forEach(tag => {
+    if (!mongoose.Types.ObjectId.isValid(tag)) {
+      const error = new Error('The tag `id` is not valid');
+      error.status = 400;
+      return next(error);
+    }
+  });
+
   Note
     .create({
       title: req.body.title,
       content: req.body.content,
-      folderId: req.body.folderId
+      folderId: req.body.folderId,
+      tags: req.body.tags
     })
     // .select('id title content folderId created')
     .then (result => {
