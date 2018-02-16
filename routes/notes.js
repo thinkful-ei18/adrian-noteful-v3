@@ -66,7 +66,8 @@ router.get('/notes/:id', (req, res, next) => {
 
   return Note
     .findById(req.params.id)
-    .select('id title content folderId created')
+    .select('id title content folderId tags created')
+    .populate('tags')
     .then(result => {
       res.status(200).json(result);
     })
