@@ -132,9 +132,33 @@ describe('hooks', function () {
   });
 
   /*         POST A TAG           */
-  describe('GET /v3/tags', function () {
+  describe('POST /v3/tags', function () {
 
-
+    it('should create and return a new item when provided valid data', function () {
+      const newTag = {
+        'name': 'Neat'
+      };
+      let body;
+      // 1) First, call the API
+      return chai.request(app)
+        .post('/v3/tags')
+        .send(newTag)
+        .then(function (res) {
+          body = res.body;
+          expect(res).to.have.status(201);
+          expect(res).to.have.header('location');
+          expect(res).to.be.json;
+          expect(body).to.be.a('object');
+          expect(body).to.include.keys('name');
+          // 2) **then** call the database
+          return Tag.findById(body.id);
+        })
+      // 3) **then** compare
+        .then(data => {
+          expect(body.title).to.equal(data.title);
+          expect(body.content).to.equal(data.content);
+        });
+    });
 
   }); //END OF  POST TAG
 
