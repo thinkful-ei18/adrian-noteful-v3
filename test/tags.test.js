@@ -196,7 +196,16 @@ describe('hooks', function () {
         });
     });
 
-  }); //END OF  POST TAG
+  }); //END OF POST TAG
 
+
+  /*         PUT A TAG           */
+  describe('PUT /v3/tags', function () {
+
+
+
+
+
+  }); //END OF PUT TAG
 
 }); // END OF MOCHA HOOK
