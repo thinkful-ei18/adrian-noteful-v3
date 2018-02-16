@@ -40,7 +40,7 @@ describe('hooks', function () {
   /*         GET ALL TAGS           */
   describe('GET /v3/folders', function () {
 
-    it.only('should return the correct number of folders', function () {
+    it('should return the correct number of folders', function () {
       const dbPromise = Tag.find();
       const apiPromise = chai.request(app).get('/v3/tags');
 
