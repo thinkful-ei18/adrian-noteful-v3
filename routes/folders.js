@@ -46,6 +46,9 @@ router.get('/folders/:id', (req, res, next) => {
 });
 
 router.post('/folders', (req, res, next) => {
+  const { name } = req.body;
+  const newFolder = { name };
+
   if (!name) {
     const err = new Error('Missing `name` in request body');
     err.status = 400;
@@ -53,9 +56,7 @@ router.post('/folders', (req, res, next) => {
   }
 
   Folder
-    .create({
-      name: req.body.name
-    })
+    .create(newFolder)
     .then(result => {
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
