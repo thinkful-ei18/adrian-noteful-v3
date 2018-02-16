@@ -178,7 +178,7 @@ describe('hooks', function () {
         });
     });
 
-    it('should respond with a 400 error if tag `name` already exists', function () {
+    it('should respond with 400 error if tag `name` already exists', function () {
       const existingTagName = {name: 'foo'};
       const spy = chai.spy();
 
