@@ -68,11 +68,15 @@ describe('hooks', function () {
           expect(spy).to.not.have.been.called();
         });
     });
-
-
   }); //END OF GET FOLDERS
 
 
+  /*         GET ALL TAGS           */
+  describe('GET /v3/tags/id', function () {
 
+
+
+
+  });
 
 }); // END OF MOCHA HOOK
