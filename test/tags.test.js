@@ -178,6 +178,24 @@ describe('hooks', function () {
         });
     });
 
+    it('should respond with a 400 error if tag `name` already exists', function () {
+      const existingTagName = {name: 'foo'};
+      const spy = chai.spy();
+
+      return chai.request(app)
+        .post('/v3/tags')
+        .send(existingTagName)
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `tag` name already exists');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
   }); //END OF  POST TAG
 
 
