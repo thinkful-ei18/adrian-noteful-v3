@@ -134,7 +134,7 @@ describe('hooks', function () {
   /*         POST A TAG           */
   describe('POST /v3/tags', function () {
 
-    it('should create and return a new item when provided valid data', function () {
+    it.only('should create and return a new tag when provided valid data', function () {
       const newTag = {
         'name': 'Neat'
       };
@@ -149,7 +149,7 @@ describe('hooks', function () {
           expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(body).to.be.a('object');
-          expect(body).to.include.keys('name');
+          expect(body).to.include.keys('id', 'name');
           // 2) **then** call the database
           return Tag.findById(body.id);
         })
