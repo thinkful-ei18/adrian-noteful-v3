@@ -81,7 +81,7 @@ router.post('/notes', (req, res, next) => {
     })
     // .select('id title content folderId created')
     .then (result => {
-      res.location(`${req.originalUrl}/${result.id}`).json(result).status(201);
+      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
     .catch(next);
 
