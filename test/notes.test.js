@@ -58,6 +58,8 @@ describe('hooks', function () {
         });
     });
 
+
+
   }); // end of GET /v3/notes tests
 
   /*         GET NOTE BY ID           */
@@ -77,7 +79,7 @@ describe('hooks', function () {
           expect(res).to.be.json;
 
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('id', 'title', 'content');
+          expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'created');
 
           // 3) **then** compare
           expect(res.body.id).to.equal(data.id);
