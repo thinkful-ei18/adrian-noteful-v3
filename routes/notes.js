@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 router.get('/notes', (req, res, next) => {
   // console.log('Get All Notes');
 
-  const { searchTerm, folderId } = req.query; //
+  const { searchTerm, folderId, tagId } = req.query; //
   // console.log(searchTerm, folderId);
   // const folderId = req.query.folderId;
 
@@ -30,11 +30,17 @@ router.get('/notes', (req, res, next) => {
     filter.folderId = folderId;
   }
 
+  if (tagId) {
+    filter.tags = tagId;
+  }
+
   // Note.find({WHAT YOU'RE LOOKING FOR}, {WHAT TO RETURN});
 
   return Note.find(filter, projection)
-    .select('id title content folderId created')
+    .select('id title content folderId tags created')
+    .populate('tags')
     .sort(sort)
+
     .then(results => {
       res.json(results);
     })
