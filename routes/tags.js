@@ -39,6 +39,11 @@ router.get('/tags/:id', function (req, res, next) {
     });
 });
 
+router.post('/tags', function (req, res, next) {
+
+
+
+});
 
 
 
