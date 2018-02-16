@@ -134,7 +134,7 @@ describe('hooks', function () {
   /*         POST A TAG           */
   describe('POST /v3/tags', function () {
 
-    it.only('should create and return a new tag when provided valid data', function () {
+    it('should create and return a new tag when provided valid data', function () {
       const newTag = {
         'name': 'Neat'
       };
@@ -157,6 +157,24 @@ describe('hooks', function () {
         .then(data => {
           expect(body.title).to.equal(data.title);
           expect(body.content).to.equal(data.content);
+        });
+    });
+
+    it('should respond with a 400 error if `name` is not provided', function () {
+      const badTagName = {name: ''};
+      const spy = chai.spy();
+
+      return chai.request(app)
+        .post('/v3/tags')
+        .send(badTagName)
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('Missing `name` in request body');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
         });
     });
 
