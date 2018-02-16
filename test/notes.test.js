@@ -13,7 +13,9 @@ const mongoose = require('mongoose');
 const { TEST_MONGODB_URI } = require('../config');
 
 const Note = require('../models/note');
-const seedData = require('../db/seed/notes');
+const seedNotes = require('../db/seed/notes');
+const seedFolders = require('../db/seed/folders');
+const Folder = require('../models/folder');
 
 // console.log(seedData);
 
@@ -25,7 +27,9 @@ describe('hooks', function () {
   });
 
   beforeEach(function() {
-    return Note.insertMany(seedData)
+    const noteInsertPromise = Note.insertMany(seedNotes);
+    const folderInsertPromise = Folder.insertMany(seedFolders);
+    return Promise.all([noteInsertPromise, folderInsertPromise])
       .then(() => Note.createIndexes());
   });
 
@@ -78,31 +82,22 @@ describe('hooks', function () {
         });
     });
 
-    // it.only('should return the correct search results for a folderId query', function () {
-    //   let filter = {};
-    //   let folderFilter = filter.$text;
-    //   let folderId = '111111111111111111111100';
-    //   if (folderId) {
-    //     filter.folderId = folderId;
-    //   }
-
-    //   const dbPromise = Note.find(
-    //     { filter.$text: { $search: folderId } },
-    //     { score: { $meta: 'textScore'} })
-    //     .sort( {score: {$meta: 'textScore'} });
-
-    //   const apiPromise = chai.request(app).get(`/v3/notes?folderId=${folderId}`);
-
-    //   return Promise.all([dbPromise, apiPromise])
-    //     .then(([data, res]) => {
-    //       expect(res).to.have.status(200);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('array');
-    //       // expect(res.body).to.have.length(data.length);
-    //       expect(res.body[0]).to.be.an('object');
-    //       // expect(res.body[0].id).to.equal(data[0].id);
-    //     });
-    // });
+    it('should return correct search results for a folderId query', function () {
+      let data;
+      return Folder.findOne().select('id name')
+        .then((_data) => {
+          data = _data;
+          const dbPromise = Note.find({ folderId: data.id });
+          const apiPromise = chai.request(app).get(`/v3/notes?folderId=${data.id}`);
+          return Promise.all([dbPromise, apiPromise]);
+        })
+        .then(([data, res]) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(data.length);
+        });
+    });
 
 
   }); // end of GET /v3/notes tests
