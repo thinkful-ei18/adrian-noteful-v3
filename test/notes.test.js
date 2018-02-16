@@ -26,7 +26,7 @@ describe('hooks', function () {
 
   beforeEach(function() {
     return Note.insertMany(seedData)
-      .then(() => Note.ensureIndexes());
+      .then(() => Note.createIndexes());
   });
 
   afterEach(function() {

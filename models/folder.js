@@ -6,7 +6,7 @@ const foldersSchema = new mongoose.Schema({
   name: {type: String, required: true, unique: true}
 });
 
-// foldersSchema.index({name: 'text'});
+foldersSchema.index({name: 'text'});
 
 foldersSchema.set('toObject', {
   transform: function (doc, ret) {
