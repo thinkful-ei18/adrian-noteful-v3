@@ -38,7 +38,7 @@ describe('hooks', function () {
 
 
   /*         GET ALL TAGS           */
-  describe('GET /v3/folders', function () {
+  describe('GET /v3/tags', function () {
 
     it('should return the correct number of folders', function () {
       const dbPromise = Tag.find();
@@ -52,6 +52,24 @@ describe('hooks', function () {
           expect(res.body).to.have.length(data.length);
         });
     });
+
+    it.only('should return a 404 bad path', function () {
+
+      const spy = chai.spy();
+      return chai.request(app)
+        .get('/v3/tagz')
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eq('Not Found');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
+
   }); //END OF GET FOLDERS
 
 
