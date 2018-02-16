@@ -13,7 +13,7 @@ router.get('/tags', function (req, res, next) {
     .select('name')
     .sort('name')
     .then(results => {
-      res.json(results)
+      res.json(results);
     })
     .catch(next);
 });

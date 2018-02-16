@@ -53,7 +53,7 @@ describe('hooks', function () {
         });
     });
 
-    it.only('should return a 404 bad path', function () {
+    it('should return a 404 bad path', function () {
 
       const spy = chai.spy();
       return chai.request(app)
