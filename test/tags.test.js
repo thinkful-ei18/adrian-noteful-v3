@@ -202,7 +202,7 @@ describe('hooks', function () {
   /*         PUT A TAG           */
   describe('PUT /v3/tags', function () {
 
-    it.only('should change the name of a tag', function () {
+    it('should change the name of a tag', function () {
 
       const id = '222222222222222222222202';
       const updateTag = {name: 'Important!'};
@@ -227,8 +227,73 @@ describe('hooks', function () {
         });
     });
 
+    it('should validate input for a tag title', function () {
 
+      const id = '22222222222222222222220';
+      const updateTag = {name: ''};
+      const options = { new: true };
+      let body;
 
-  }); //END OF PUT TAG
+      return chai.request(app)
+        .put(`/v3/tags/${id}`)
+        .send(updateTag)
+        .then(function (res) {
+          body = res.body;
+          expect(res).to.be.null;
+          expect.res.body.should.have.property('error');
+          return Tag.findByIdAndUpdate(id, updateTag, options);
+        })
+        .then(data => {
+          body = data.body;
+          expect(data).to.be.null;
+          expect.data.body.should.have.property('error');
+        })
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.property('error');
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('Missing `name` in request body');
+        });
+    });
+
+    it('should respond with a 400 for improperly formatted id', function () {
+      const badId = '99-99-99';
+      const updateTag = {name: 'To-do'};
+      const spy = chai.spy();
+
+      return chai.request(app)
+        .put(`/v3/tags/${badId}`)
+        .send(updateTag)
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `id` is not valid');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
+    it('should respond with 400 error if tag `name` already exists', function () {
+      const existingTagName = {name: 'foo'};
+      const id = '222222222222222222222203';
+      const spy = chai.spy();
+
+      return chai.request(app)
+        .put(`/v3/tags/${id}`)
+        .send(existingTagName)
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `tag` name already exists');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
+  }); // END OF PUT TAG
 
 }); // END OF MOCHA HOOK
