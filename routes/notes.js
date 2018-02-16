@@ -108,7 +108,7 @@ router.post('/notes', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/notes/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId, tags } = req.body;
 
   /***** Never trust users - validate input *****/
   if (!title) {
@@ -117,11 +117,19 @@ router.put('/notes/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateItem = { title, content, folderId };
+  tags.forEach(tag => {
+    if (!mongoose.Types.ObjectId.isValid(tag)) {
+      const error = new Error('The tag `id` is not valid');
+      error.status = 400;
+      return next(error);
+    }
+  });
+
+  const updateItem = { title, content, folderId, tags };
   const options = { new: true };
 
   Note.findByIdAndUpdate(id, updateItem, options)
-    .select('id title content folderId')
+    .select('id title content folderId tags')
     .then(result => {
       res.json(result);
     })
