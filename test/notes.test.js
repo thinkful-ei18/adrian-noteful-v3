@@ -77,6 +77,34 @@ describe('hooks', function () {
           expect(res.body[0].id).to.equal(data[0].id);
         });
     });
+
+    // it.only('should return the correct search results for a folderId query', function () {
+    //   let filter = {};
+    //   let folderFilter = filter.$text;
+    //   let folderId = '111111111111111111111100';
+    //   if (folderId) {
+    //     filter.folderId = folderId;
+    //   }
+
+    //   const dbPromise = Note.find(
+    //     { filter.$text: { $search: folderId } },
+    //     { score: { $meta: 'textScore'} })
+    //     .sort( {score: {$meta: 'textScore'} });
+
+    //   const apiPromise = chai.request(app).get(`/v3/notes?folderId=${folderId}`);
+
+    //   return Promise.all([dbPromise, apiPromise])
+    //     .then(([data, res]) => {
+    //       expect(res).to.have.status(200);
+    //       expect(res).to.be.json;
+    //       expect(res.body).to.be.a('array');
+    //       // expect(res.body).to.have.length(data.length);
+    //       expect(res.body[0]).to.be.an('object');
+    //       // expect(res.body[0].id).to.equal(data[0].id);
+    //     });
+    // });
+
+
   }); // end of GET /v3/notes tests
 
   /*         GET NOTE BY ID           */
