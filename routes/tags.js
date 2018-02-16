@@ -14,8 +14,8 @@ router.get('/tags', function (req, res, next) {
     .sort('name')
     .then(results => {
       res.json(results)
-        .catch(next);
-    });
+    })
+    .catch(next);
 });
 
 router.get('/tags/:id', function (req, res, next) {
@@ -36,7 +36,8 @@ router.get('/tags/:id', function (req, res, next) {
       } else {
         res.json(result);
       }
-    });
+    })
+    .catch(next);
 });
 
 router.post('/tags', function (req, res, next) {

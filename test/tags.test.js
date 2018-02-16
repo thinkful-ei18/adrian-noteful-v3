@@ -37,10 +37,24 @@ describe('hooks', function () {
   });
 
 
+  /*         GET ALL TAGS           */
+  describe('GET /v3/folders', function () {
+
+    it.only('should return the correct number of folders', function () {
+      const dbPromise = Tag.find();
+      const apiPromise = chai.request(app).get('/v3/tags');
+
+      return Promise.all([dbPromise, apiPromise])
+        .then(([data, res]) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(data.length);
+        });
+    });
+  }); //END OF GET FOLDERS
 
 
 
 
-
-
-});
+}); // END OF MOCHA HOOK
