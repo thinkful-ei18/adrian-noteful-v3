@@ -100,7 +100,33 @@ router.put('/tags/:id', function (req, res, next) {
 
 });
 
+router.delete('/tags/:id', function (req, res, next) {
 
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const error = new Error('The `id` is not valid');
+    error.status = 400;
+    return next(error);
+  }
+
+  const deleteTag = Tag.findByIdAndRemove({_id: req.params.id});
+  // const deleteNotes = Note.deleteMany({folderId: req.params.id});
+  const resetTagId = Tag.update({ $pull: { tags: {$in: [] } } });
+
+
+
+  Promise.all([deleteTag, resetTagId])
+    .then(tagResult => {
+      // console.log(folderResult);
+      const result = tagResult[0];
+      if(result){
+        res.status(204).end();
+      } else {
+        next();
+      }
+    })
+    .catch(next);
+
+});
 
 
 
