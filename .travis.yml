@@ -5,14 +5,14 @@ services:
   env:
   - NODE_ENV=test
 
-before_script:
-  - sleep 15
-  - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+# before_script:
+#   - sleep 15
+#   - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 
-deploy:
-  provider: heroku
-  api_key:
-    secure: 4e417acd-edce-4507-8e4b-79a96b6a75fc
-  app: https://adrian-noteful-v3.herokuapp.com/
-  on:
-    repo:  https://git.heroku.com/adrian-noteful-v3.git
+# deploy:
+#   provider: heroku
+#   api_key:
+#     secure: 4e417acd-edce-4507-8e4b-79a96b6a75fc
+#   app: https://adrian-noteful-v3.herokuapp.com/
+#   on:
+#     repo:  https://git.heroku.com/adrian-noteful-v3.git
