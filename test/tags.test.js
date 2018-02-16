@@ -202,7 +202,30 @@ describe('hooks', function () {
   /*         PUT A TAG           */
   describe('PUT /v3/tags', function () {
 
+    it.only('should change the name of a tag', function () {
 
+      const id = '222222222222222222222202';
+      const updateTag = {name: 'Important!'};
+      const options = { new: true };
+      let body;
+
+      return chai.request(app)
+        .put(`/v3/tags/${id}`)
+        .send(updateTag)
+        .then(function (res) {
+          body = res.body;
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(body).to.be.a('object');
+          expect(body).to.include.keys('id', 'name');
+          return Tag.findByIdAndUpdate(id, updateTag, options);
+        })
+        .then(data => {
+          expect(body.id).to.equal(data.id);
+          expect(body.title).to.equal(data.title);
+          expect(body.content).to.equal(data.content);
+        });
+    });
 
 
 
