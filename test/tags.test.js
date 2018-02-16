@@ -72,8 +72,29 @@ describe('hooks', function () {
 
 
   /*         GET ALL TAGS           */
-  describe('GET /v3/tags/id', function () {
+  describe('GET /v3/tags/:id', function () {
 
+    it('should return correct tag', function () {
+      let data;
+      // 1) First, call the database
+      return Tag.findOne().select('name')
+        .then(_data => {
+          data = _data;
+          // 2) **then** call the API
+          return chai.request(app).get(`/v3/tags/${data.id}`);
+        })
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.keys('id', 'name');
+
+          // 3) **then** compare
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.name).to.equal(data.name);
+        });
+    });
 
 
 
