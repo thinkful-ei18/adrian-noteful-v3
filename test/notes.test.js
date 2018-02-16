@@ -58,8 +58,25 @@ describe('hooks', function () {
         });
     });
 
+    it('should return the correct search results for a searchTerm query', function () {
+      const term = 'gaga';
+      const dbPromise = Note.find(
+        { $text: { $search: term, $language: 'none'} },
+        { score: { $meta: 'textScore'} })
+        .sort( {score: {$meta: 'textScore'} });
 
+      const apiPromise = chai.request(app).get(`/v3/notes?searchTerm=${term}`);
 
+      return Promise.all([dbPromise, apiPromise])
+        .then(([data, res]) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(data.length);
+          expect(res.body[0]).to.be.an('object');
+          expect(res.body[0].id).to.equal(data[0].id);
+        });
+    });
   }); // end of GET /v3/notes tests
 
   /*         GET NOTE BY ID           */
@@ -233,6 +250,5 @@ describe('hooks', function () {
     });
 
   }); // END OF DELETE
-
 
 }); // END OF MOCHA HOOK
