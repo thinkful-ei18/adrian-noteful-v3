@@ -40,11 +40,32 @@ router.get('/tags/:id', function (req, res, next) {
     .catch(next);
 });
 
-// router.post('/tags', function (req, res, next) {
+router.post('/tags', function (req, res, next) {
+
+  const { name } = req.body;
+  const newTag = { name };
+
+  if (!name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  Tag
+    .create(newTag)
+    .then(result => {
+      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
+    })
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The `folder` name already exists');
+        err.status = 400;
+      }
+      next(err);
+    });
 
 
-
-// });
+});
 
 
 

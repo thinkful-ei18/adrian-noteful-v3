@@ -113,6 +113,23 @@ describe('hooks', function () {
         });
     });
 
+    it('should respond with a 404 for a bad id', function () {
+      const badId = '222222222222222222222299';
+      const spy = chai.spy();
+
+      return chai.request(app)
+        .get(`/v3/tags/${badId}`)
+        .then(spy)
+        .catch(err => {
+          const res = err.response;
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eq('`id` not found!');
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
 
 
 
