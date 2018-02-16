@@ -129,10 +129,14 @@ describe('hooks', function () {
           expect(spy).to.not.have.been.called();
         });
     });
+  });
+
+  /*         POST A TAG           */
+  describe('GET /v3/tags', function () {
 
 
 
+  }); //END OF  POST TAG
 
-  }); //END OF GET NOTES BY ID
 
 }); // END OF MOCHA HOOK
