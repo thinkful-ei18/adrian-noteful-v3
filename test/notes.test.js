@@ -119,7 +119,7 @@ describe('hooks', function () {
           expect(res).to.be.json;
 
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'created');
+          expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'tags', 'created');
 
           // 3) **then** compare
           expect(res.body.id).to.equal(data.id);
@@ -183,7 +183,7 @@ describe('hooks', function () {
     it('should modify title and content of a note', function () {
 
       const id = '000000000000000000000000';
-      const updateItem = {title: 'Brand new day!', content: 'Brand new cat!'};
+      const updateItem = {title: 'Brand new day!', content: 'Brand new cat!', tags: ['222222222222222222222200']};
       const options = { new: true };
       let body;
 
