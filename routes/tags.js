@@ -6,6 +6,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Tag = require('../models/tag');
+const Note = require('../models/note');
 
 router.get('/tags', function (req, res, next) {
   return Tag
@@ -110,7 +111,7 @@ router.delete('/tags/:id', function (req, res, next) {
 
   const deleteTag = Tag.findByIdAndRemove({_id: req.params.id});
   // const deleteNotes = Note.deleteMany({folderId: req.params.id});
-  const resetTagId = Tag.update({ $pull: { tags: {$in: [] } } });
+  const resetTagId = Note.update({ $pull: { tags: {$in: [req.params.id] } } });
 
 
 
