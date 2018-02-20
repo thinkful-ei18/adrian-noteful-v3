@@ -16,8 +16,5 @@ const localAuth = passport.authenticate('local', options);
 
 router.post('/api/secret'), localAuth, function (req, res) {
   console.log(`${req.user.username} successfully logged in.`);
-  res.json({
-    message: 'never forget!',
-    username: req.user.username
-  });
+  res.json(req.user);
 };
