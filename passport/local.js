@@ -24,7 +24,7 @@ const localStrategy = new LocalStrategy((username, password, done) => {
     }
 
     const user = { username, password };
-    done(null, user);
+    return done(null, user);
 
   } catch (err) {
     done(err);
