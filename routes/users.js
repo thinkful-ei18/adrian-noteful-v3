@@ -10,7 +10,7 @@ const User = require('../models/user');
 router.post('/users', function (req, res, next) {
 
   const { fullname, username, password } = req.body;
-  const newUser = { fullname, username, password };
+  // const newUser = { fullname, username, password };
 
 
   return User.hashPassword(password)
