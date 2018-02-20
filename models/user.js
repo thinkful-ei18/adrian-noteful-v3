@@ -3,9 +3,9 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
-  {fullname: {type: String}},
-  {username: {type: String, unique: true}},
-  {password: {type: String}}
+  {fullname: {type: String},
+    username: {type: String, unique: true},
+    password: {type: String}}
 );
 
 userSchema.set('toObject', {
@@ -17,6 +17,6 @@ userSchema.set('toObject', {
   }
 });
 
-const User = mongoose.model('Note', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

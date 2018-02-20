@@ -9,8 +9,8 @@ const User = require('../models/user');
 
 router.post('/users', function (req, res, next) {
 
-  const {fullname, username, password } = req.body;
-  const newUser = {fullname, username, password };
+  const { fullname, username, password } = req.body;
+  const newUser = { fullname, username, password };
 
   User
     .create(newUser)
@@ -20,3 +20,5 @@ router.post('/users', function (req, res, next) {
     .catch(next);
 
 });
+
+module.exports = router;
