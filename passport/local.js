@@ -30,3 +30,8 @@ const localStrategy = new LocalStrategy((username, password, done) => {
     done(err);
   }
 });
+
+passport.use(localStrategy);
+const localAuth = passport.authenticate('local', { session: false });
+
+
