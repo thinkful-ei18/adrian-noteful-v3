@@ -1,13 +1,20 @@
 'use strict';
 
+const express = require('express');
+const router = express.Router();
+
+const mongoose = require('mongoose');
+const passport = require('passport');
+
+const localStrategy = require('../passport/local');
+
+
 const options = {session: false, failwithError: true};
 
+passport.use(localStrategy);
 const localAuth = passport.authenticate('local', options);
 
-passport.use(localStrategy);
-const localAuth = passport.authenticate('local', { session: false });
-
-app.post('/api/secret'), localAuth, function (req, res) {
+router.post('/api/secret'), localAuth, function (req, res) {
   console.log(`${req.user.username} successfully logged in.`);
   res.json({
     message: 'never forget!',
