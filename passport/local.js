@@ -13,23 +13,51 @@ const User = require('../models/user');
 
 const localStrategy = new LocalStrategy((username, password, done) => {
 
-  try {
-    if (username !== 'thinkfulstudent123') {
-      console.log('Incorrect username!');
-      return done(null, false);
-    }
+  let user;
+  User.findOne({ username })
+    .then(results => {
+      user = results;
+      if (!user) {
+        return Promise.reject({
+          reason: 'LoginError',
+          message: 'Incorrect username',
+          location: 'username'
+        });
+      }
+      return user.validatePassword(password);
+    })
+    .then(isValid => {
+      if (!isValid) {
+        return Promise.reject({
+          reason: 'LoginError',
+          message: 'Incorrect password',
+          location: 'password'
+        });
+      }
+      return done(null, user);
+    })
+    .catch(err => {
 
-    if (password !== 'iamadrian') {
-      console.log('Incorrect password!');
-      return done(null, false);
-    }
+    });
 
-    const user = { username, password };
-    return done(null, user);
 
-  } catch (err) {
-    done(err);
-  }
+  // try {
+  //   if (username !== 'thinkfulstudent123') {
+  //     console.log('Incorrect username!');
+  //     return done(null, false);
+  //   }
+
+  //   if (password !== 'iamadrian') {
+  //     console.log('Incorrect password!');
+  //     return done(null, false);
+  //   }
+
+  //   const user = { username, password };
+  //   return done(null, user);
+
+  // } catch (err) {
+  //   done(err);
+  // }
 
 });
 
