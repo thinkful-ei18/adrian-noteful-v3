@@ -31,17 +31,6 @@ const localStrategy = new LocalStrategy((username, password, done) => {
   }
 });
 
-// passport.use(localStrategy);
-// const localAuth = passport.authenticate('local', { session: false });
-
-// app.post('/api/secret'), localAuth, function (req, res) {
-//   console.log(`${req.user.username} successfully logged in.`);
-//   res.json({
-//     message: 'never forget!',
-//     username: req.user.username
-//   });
-// };
-
 // app.listen(process.env.PORT || 8080, function () {
 //   console.info(`Server listening on ${this.address().port}`);
 // });
