@@ -31,6 +31,8 @@ const localStrategy = new LocalStrategy((username, password, done) => {
   }
 });
 
+module.exports = localStrategy;
+
 // app.listen(process.env.PORT || 8080, function () {
 //   console.info(`Server listening on ${this.address().port}`);
 // });

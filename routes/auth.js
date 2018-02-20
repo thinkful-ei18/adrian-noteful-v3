@@ -18,3 +18,5 @@ router.post('/api/secret'), localAuth, function (req, res) {
   console.log(`${req.user.username} successfully logged in.`);
   res.json(req.user);
 };
+
+module.exports = router;
