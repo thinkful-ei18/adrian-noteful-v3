@@ -12,9 +12,6 @@ app.use(express.json());
 const User = require('../models/user');
 
 const localStrategy = new LocalStrategy((username, password, done) => {
-  // User
-  //   .findOne({username})
-  //   .then();
 
   try {
     if (username !== 'thinkfulstudent123') {

@@ -6,11 +6,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-// const localStrategy = require('../passport/local');
-
-
 const options = {session: false, failwithError: true};
-
 
 const localAuth = passport.authenticate('local', options);
 
