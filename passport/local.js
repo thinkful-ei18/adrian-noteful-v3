@@ -11,6 +11,22 @@ app.use(express.json());
 
 const User = require('../models/user');
 
-User.findOne({ username })
-  .then(user => {})
-  .catch(err => {});
+const localStrategy = new LocalStrategy((username, password, done) => {
+  try {
+    if (username !== 'thinkfulstudent123') {
+      console.log('Incorrect username!');
+      return done(null, false);
+    }
+
+    if (password !== 'iamadrian') {
+      console.log('Incorrect password!');
+      return done(null, false);
+    }
+
+    const user = { username, password };
+    done(null, user);
+
+  } catch (err) {
+    done(err);
+  }
+});
