@@ -6,17 +6,17 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const localStrategy = require('../passport/local');
+// const localStrategy = require('../passport/local');
 
 
 const options = {session: false, failwithError: true};
 
-passport.use(localStrategy);
+
 const localAuth = passport.authenticate('local', options);
 
-router.post('/login'), localAuth, function (req, res) {
+router.post('/login', localAuth, function (req, res) {
   console.log(`${req.user.username} successfully logged in.`);
-  res.json(req.user);
-};
+  return res.json(req.user);
+});
 
 module.exports = router;

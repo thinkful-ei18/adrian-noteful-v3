@@ -30,6 +30,7 @@ app.use(express.static('public'));
 
 // Parse request body
 app.use(express.json());
+passport.use(localStrategy);
 
 // Mount router on "/api"
 app.use('/v3', notesRouter);
@@ -37,6 +38,7 @@ app.use('/v3', foldersRouter);
 app.use('/v3', tagsRouter);
 app.use('/v3', usersRouter);
 app.use('/v3', authRouter);
+
 
 // Catch-all 404
 app.use(function (req, res, next) {

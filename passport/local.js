@@ -12,6 +12,10 @@ app.use(express.json());
 const User = require('../models/user');
 
 const localStrategy = new LocalStrategy((username, password, done) => {
+  // User
+  //   .findOne({username})
+  //   .then();
+
   try {
     if (username !== 'thinkfulstudent123') {
       console.log('Incorrect username!');
@@ -29,6 +33,7 @@ const localStrategy = new LocalStrategy((username, password, done) => {
   } catch (err) {
     done(err);
   }
+
 });
 
 module.exports = localStrategy;
@@ -36,3 +41,21 @@ module.exports = localStrategy;
 // app.listen(process.env.PORT || 8080, function () {
 //   console.info(`Server listening on ${this.address().port}`);
 // });
+
+// try {
+//   if (username !== 'thinkfulstudent123') {
+//     console.log('Incorrect username!');
+//     return done(null, false);
+//   }
+
+//   if (password !== 'iamadrian') {
+//     console.log('Incorrect password!');
+//     return done(null, false);
+//   }
+
+//   const user = { username, password };
+//   return done(null, user);
+
+// } catch (err) {
+//   done(err);
+// }
