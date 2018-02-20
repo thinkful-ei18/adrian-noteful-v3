@@ -29,7 +29,7 @@ router.post('/users', function (req, res, next) {
     return next(err);
   }
 
-
+  requiredFields.forEach(field => req.body[field] = req.body[field].replace(/^\s+|\s+$/g, '') );
 
   // The username and password should not have leading or trailing whitespace. And the endpoint should not automatically trim the values
 
