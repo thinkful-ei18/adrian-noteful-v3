@@ -1,7 +1,6 @@
 'use strict';
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = require('JWT_SECRET').config();
-const JWT_EXPIRY = require('JWT_EXPIRY').config();
+const { JWT_SECRET, JWT_EXPIRY } = require('../config');
 
 const express = require('express');
 const router = express.Router();
