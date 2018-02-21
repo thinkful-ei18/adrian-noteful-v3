@@ -23,8 +23,8 @@ const noteful = (function () {
     showFailureMessage(err.responseJSON.message);
   }
 
-
   function render() {
+
     $('.signup-login').toggle(!store.authorized);
 
     const notesList = generateNotesList(store.notes, store.currentNote);
@@ -144,7 +144,8 @@ const noteful = (function () {
         .then((response) => {
           store.currentNote = response;
           render();
-        });
+        })
+        .catch(handleErrors);
     });
   }
 
@@ -158,7 +159,8 @@ const noteful = (function () {
         .then(response => {
           store.notes = response;
           render();
-        });
+        })
+        .catch(handleErrors);
     });
   }
 
@@ -185,7 +187,8 @@ const noteful = (function () {
           .then(response => {
             store.notes = response;
             render();
-          });
+          })
+          .catch(handleErrors);
       } else {
         api.create('/v3/notes', noteObj)
           .then(createResponse => {
@@ -195,7 +198,8 @@ const noteful = (function () {
           .then(response => {
             store.notes = response;
             render();
-          });
+          })
+          .catch(handleErrors);
       }
     });
   }
@@ -223,7 +227,140 @@ const noteful = (function () {
         .then(response => {
           store.notes = response;
           render();
-        });
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  /**
+   * FOLDERS EVENT LISTENERS AND HANDLERS
+   */
+  function handleFolderClick() {
+    $('.js-folders-list').on('click', '.js-folder-link', event => {
+      event.preventDefault();
+
+      const folderId = getFolderIdFromElement(event.currentTarget);
+      store.currentQuery.folderId = folderId;
+      if (folderId !== store.currentNote.folderId) {
+        store.currentNote = {};
+      }
+
+      api.search('/v3/notes', store.currentQuery)
+        .then(response => {
+          store.notes = response;
+          render();
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  function handleNewFolderSubmit() {
+    $('.js-new-folder-form').on('submit', event => {
+      event.preventDefault();
+
+      const newFolderName = $('.js-new-folder-entry').val();
+      api.create('/v3/folders', { name: newFolderName })
+        .then(() => {
+          $('.js-new-folder-entry').val();
+          return api.search('/v3/folders');
+        })
+        .then(response => {
+          store.folders = response;
+          render();
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  function handleFolderDeleteClick() {
+    $('.js-folders-list').on('click', '.js-folder-delete', event => {
+      event.preventDefault();
+      const folderId = getFolderIdFromElement(event.currentTarget);
+
+      if (folderId === store.currentQuery.folderId) {
+        store.currentQuery.folderId = null;
+      }
+      if (folderId === store.currentNote.folderId) {
+        store.currentNote = {};
+      }
+
+      api.remove(`/v3/folders/${folderId}`)
+        .then(() => {
+          const notesPromise = api.search('/v3/notes');
+          const folderPromise = api.search('/v3/folders');
+          return Promise.all([notesPromise, folderPromise]);
+        })
+        .then(([notes, folders]) => {
+          store.notes = notes;
+          store.folders = folders;
+          render();
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  /**
+   * TAGS EVENT LISTENERS AND HANDLERS
+   */
+  function handleTagClick() {
+    $('.js-tags-list').on('click', '.js-tag-link', event => {
+      event.preventDefault();
+
+      const tagId = getTagIdFromElement(event.currentTarget);
+      store.currentQuery.tagId = tagId;
+
+      store.currentNote = {};
+
+      api.search('/v3/notes', store.currentQuery)
+        .then(response => {
+          store.notes = response;
+          render();
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  function handleNewTagSubmit() {
+    $('.js-new-tag-form').on('submit', event => {
+      event.preventDefault();
+
+      const newTagName = $('.js-new-tag-entry').val();
+      api.create('/v3/tags', { name: newTagName })
+        .then(() => {
+          return api.search('/v3/tags');
+        })
+        .then(response => {
+          store.tags = response;
+          render();
+        })
+        .catch(handleErrors);
+    });
+  }
+
+  function handleTagDeleteClick() {
+    $('.js-tags-list').on('click', '.js-tag-delete', event => {
+      event.preventDefault();
+      const tagId = getTagIdFromElement(event.currentTarget);
+
+      if (tagId === store.currentQuery.tagId) {
+        store.currentQuery.tagId = null;
+      }
+
+      store.currentNote = {};
+
+      api.remove(`/v3/tags/${tagId}`)
+        .then(() => {
+          return api.search('/v3/tags');
+        })
+        .then(response => {
+          store.tags = response;
+          return api.search('/v3/notes', store.currentQuery);
+        })
+        .then(response => {
+          store.notes = response;
+          render();
+        })
+        .catch(handleErrors);
     });
   }
 
@@ -277,136 +414,6 @@ const noteful = (function () {
           render();
         })
         .catch(handleErrors);
-    });
-
-  /**
-   * FOLDERS EVENT LISTENERS AND HANDLERS
-   */
-  function handleFolderClick() {
-    $('.js-folders-list').on('click', '.js-folder-link', event => {
-      event.preventDefault();
-
-      const folderId = getFolderIdFromElement(event.currentTarget);
-      store.currentQuery.folderId = folderId;
-      if (folderId !== store.currentNote.folderId) {
-        store.currentNote = {};
-      }
-
-      api.search('/v3/notes', store.currentQuery)
-        .then(response => {
-          store.notes = response;
-          render();
-        });
-    });
-  }
-
-  function handleNewFolderSubmit() {
-    $('.js-new-folder-form').on('submit', event => {
-      event.preventDefault();
-
-      const newFolderName = $('.js-new-folder-entry').val();
-      api.create('/v3/folders', { name: newFolderName })
-        .then(() => {
-          $('.js-new-folder-entry').val();
-          return api.search('/v3/folders');
-        }).then(response => {
-          store.folders = response;
-          render();
-        }).catch(err => {
-          $('.js-error-message').text(err.responseJSON.message);
-        });
-    });
-  }
-
-  function handleFolderDeleteClick() {
-    $('.js-folders-list').on('click', '.js-folder-delete', event => {
-      event.preventDefault();
-      const folderId = getFolderIdFromElement(event.currentTarget);
-
-      if (folderId === store.currentQuery.folderId) {
-        store.currentQuery.folderId = null;
-      }
-      if (folderId === store.currentNote.folderId) {
-        store.currentNote = {};
-      }
-
-      api.remove(`/v3/folders/${folderId}`)
-        .then(() => {
-          const notesPromise = api.search('/v3/notes');
-          const folderPromise = api.search('/v3/folders');
-          return Promise.all([notesPromise, folderPromise]);
-        })
-        .then( ([notes, folders])  => {
-          store.notes = notes;
-          store.folders = folders;
-          render();
-        });
-    });
-  }
-
-  /**
-   * TAGS EVENT LISTENERS AND HANDLERS
-   */
-  function handleTagClick() {
-    $('.js-tags-list').on('click', '.js-tag-link', event => {
-      event.preventDefault();
-
-      const tagId = getTagIdFromElement(event.currentTarget);
-      store.currentQuery.tagId = tagId;
-
-      //TODO; loop over tags, if not a match, then clear
-      store.currentNote = {};
-
-      api.search('/v3/notes', store.currentQuery)
-        .then(response => {
-          store.notes = response;
-          render();
-        });
-    });
-  }
-
-  function handleNewTagSubmit() {
-    $('.js-new-tag-form').on('submit', event => {
-      event.preventDefault();
-
-      const newTagName = $('.js-new-tag-entry').val();
-      api.create('/v3/tags', { name: newTagName })
-        .then(() => {
-          return api.search('/v3/tags');
-        }).then(response => {
-          store.tags = response;
-          render();
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    });
-  }
-
-  function handleTagDeleteClick() {
-    $('.js-tags-list').on('click', '.js-tag-delete', event => {
-      event.preventDefault();
-      const tagId = getTagIdFromElement(event.currentTarget);
-
-      if (tagId === store.currentQuery.tagId) {
-        store.currentQuery.tagId = null;
-      }
-
-      //TODO; loop over tags, if not a match, then clear
-      store.currentNote = {};
-
-      api.remove(`/v3/tags/${tagId}`)
-        .then(() => {
-          return api.search('/v3/tags');
-        })
-        .then(response => {
-          store.tags = response;
-          return api.search('/v3/notes', store.currentQuery);
-        })
-        .then(response => {
-          store.notes = response;
-          render();
-        });
     });
   }
 
