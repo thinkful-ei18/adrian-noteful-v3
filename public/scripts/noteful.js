@@ -3,6 +3,27 @@
 
 const noteful = (function () {
 
+  function showSuccessMessage(message) {
+    const el = $('.js-success-message');
+    el.text(message).show();
+    setTimeout(() => el.fadeOut('slow'), 3000);
+  }
+
+  function showFailureMessage(message) {
+    const el = $('.js-error-message');
+    el.text(message).show();
+    setTimeout(() => el.fadeOut('slow'), 3000);
+  }
+
+  function handleErrors(err) {
+    if (err.status === 401) {
+      store.authorized = false;
+      noteful.render();
+    }
+    showFailureMessage(err.responseJSON.message);
+  }
+
+
   function render() {
     $('.signup-login').toggle(!store.authorized);
 
