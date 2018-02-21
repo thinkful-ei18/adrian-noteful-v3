@@ -1,8 +1,7 @@
 'use strict';
-
+const jwt = require('jsonwebtoken');
 const JWT_SECRET = require('JWT_SECRET').config();
 const JWT_EXPIRY = require('JWT_EXPIRY').config();
-
 
 const express = require('express');
 const router = express.Router();
@@ -13,6 +12,13 @@ const passport = require('passport');
 const options = {session: false, failwithError: true};
 
 const localAuth = passport.authenticate('local', options);
+
+function createAuthToken (user) {
+  return jwt.sign({ user }, JWT_SECRET, {
+    subject: user.username,
+    expiresIn: JWT_EXPIRY
+  });
+}
 
 router.post('/login', localAuth, function (req, res) {
   console.log(`${req.user.username} successfully logged in.`);
