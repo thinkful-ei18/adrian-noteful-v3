@@ -8,9 +8,11 @@ const router = express.Router();
 // const mongoose = require('mongoose');
 const passport = require('passport');
 
+
 const options = {session: false, failwithError: true};
 
 const localAuth = passport.authenticate('local', options);
+const jwtAuth = passport.authenticate('jwt', { session: false, failWithError: true });
 
 function createAuthToken (user) {
   return jwt.sign({ user }, JWT_SECRET, {
@@ -26,5 +28,9 @@ router.post('/login', localAuth, function (req, res) {
 });
 
 
+router.post('/refresh', jwtAuth, (req, res) => {
+  const authToken = createAuthToken(req.user);
+  res.json({ authToken });
+});
 
 module.exports = router;
