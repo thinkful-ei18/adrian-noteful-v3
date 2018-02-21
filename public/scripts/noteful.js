@@ -411,9 +411,6 @@ const noteful = (function () {
   }
 
   function bindEventListeners() {
-    handleSignupSubmit();
-    handleLoginSubmit();
-
     handleNoteItemClick();
     handleNoteSearchSubmit();
 
@@ -427,6 +424,9 @@ const noteful = (function () {
     handleTagClick();
     handleNewTagSubmit();
     handleTagDeleteClick();
+
+    handleSignupSubmit();
+    handleLoginSubmit();
   }
 
   // This object contains the only exposed methods from this module:
