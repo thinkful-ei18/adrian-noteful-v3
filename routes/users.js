@@ -1,51 +1,86 @@
 'use strict';
-
 const express = require('express');
-const router = express.Router();
-
-const mongoose = require('mongoose');
 
 const User = require('../models/user');
 
-router.post('/users', function (req, res, next) {
+const router = express.Router();
 
-  let { fullname, username, password } = req.body;
-  const newUser = { fullname, username, password };
+/* ========== POST/CREATE AN ITEM ========== */
+router.post('/users', (req, res, next) => {
 
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
-  requiredFields.forEach(field => {
-    if (typeof field !== 'string') {
-      const err = new Error('All input fields must be a string');
-      err.status = 400;
-      return next(err);
-    }
-  });
-
   if (missingField) {
     const err = new Error(`Missing '${missingField}' in request body`);
-    err.status = 400;
+    err.status = 422;
     return next(err);
   }
 
-  // The username and password should not have leading or trailing whitespace. And the endpoint should not automatically trim the values
-  requiredFields.forEach(field => req.body[field] = req.body[field].replace(/^\s+|\s+$/g, '') );
+  const stringFields = ['username', 'password', 'fullname'];
+  const nonStringField = stringFields.find(
+    field => field in req.body && typeof req.body[field] !== 'string'
+  );
 
-  // The username is a minimum of 1 character
-  if (req.body.username.length < 1 ) {
-    const err = new Error('Username must be at least 1 character');
-    err.status = 411;
+  if (nonStringField) {
+    const err = new Error(`Field: '${nonStringField}' must be type String`);
+    err.status = 422;
     return next(err);
   }
 
-  // The password is a minimum of 8 and max of 72 characters
-  if (!(req.body.password >= 8 && req.body.password <= 72)) {
-    const err = new Error('Password must be a minimum of 8 and max of 72 characters');
-    err.status = 406;
+  // If the username and password aren't trimmed we give an error.  Users might
+  // expect that these will work without trimming (i.e. they want the password
+  // "foobar ", including the space at the end).  We need to reject such values
+  // explicitly so the users know what's happening, rather than silently
+  // trimming them and expecting the user to understand.
+  // We'll silently trim the other fields, because they aren't credentials used
+  // to log in, so it's less of a problem.
+  const explicityTrimmedFields = ['username', 'password'];
+  const nonTrimmedField = explicityTrimmedFields.find(
+    field => req.body[field].trim() !== req.body[field]
+  );
+
+  if (nonTrimmedField) {
+    const err = new Error(`Field: '${nonTrimmedField}' cannot start or end with whitespace`);
+    err.status = 422;
     return next(err);
   }
 
+  // bcrypt truncates after 72 characters, so let's not give the illusion
+  // of security by storing extra **unused** info
+  const sizedFields = {
+    username: { min: 1 },
+    password: { min: 8, max: 72 }
+  };
+
+  const tooSmallField = Object.keys(sizedFields).find(
+    field => 'min' in sizedFields[field] &&
+      req.body[field].trim().length < sizedFields[field].min
+  );
+  if (tooSmallField) {
+    const min = sizedFields[tooSmallField].min;
+    const err = new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`);
+    err.status = 422;
+    return next(err);
+  }
+
+  const tooLargeField = Object.keys(sizedFields).find(
+    field => 'max' in sizedFields[field] &&
+      req.body[field].trim().length > sizedFields[field].max
+  );
+
+  if (tooLargeField) {
+    const max = sizedFields[tooLargeField].max;
+    const err = new Error(`Field: '${tooSmallField}' must be at most ${max} characters long`);
+    err.status = 422;
+    return next(err);
+  }
+
+  // Username and password were validated as pre-trimmed
+  let { username, password, fullname = '' } = req.body;
+  fullname = fullname.trim();
+
+  // Remove explicit hashPassword if using pre-save middleware
   return User.hashPassword(password)
     .then(digest => {
       const newUser = {
@@ -56,7 +91,7 @@ router.post('/users', function (req, res, next) {
       return User.create(newUser);
     })
     .then(result => {
-      res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
+      return res.status(201).location(`/v3/users/${result.id}`).json(result);
     })
     .catch(err => {
       if (err.code === 11000) {
