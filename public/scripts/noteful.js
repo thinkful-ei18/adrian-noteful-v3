@@ -13,19 +13,16 @@ const noteful = (function () {
     console.log('showFailureMessage:', message);
     const el = $('.js-error-message');
     el.text(message).show();
-    setTimeout(() => el.fadeOut('slow'), 3000);
+    setTimeout(() => el.fadeOut('slow'), 6000);
   }
 
   function handleErrors(err) {
+    console.log('error:', err);
     if (err.status === 401) {
       store.authorized = false;
-      const el = $('.js-error-message');
-      el.text('Please check your credentials and try logging in again.').show();
-      setTimeout(() => el.fadeOut('slow'), 6000);
       noteful.render();
     }
-
-    // showFailureMessage(err.responseJSON.message);
+    showFailureMessage(err.responseText);
   }
 
   function render() {
