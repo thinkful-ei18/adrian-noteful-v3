@@ -5,7 +5,7 @@ const { JWT_SECRET, JWT_EXPIRY } = require('../config');
 const express = require('express');
 const router = express.Router();
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const passport = require('passport');
 
 const options = {session: false, failwithError: true};
