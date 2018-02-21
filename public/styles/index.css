@@ -56,6 +56,7 @@ body>main {
   /* Total height minus Header and Footer */
   height: calc(100vh - 6em);
   min-height: 400px;
+  position: relative;
 }
 
 /* article gets 1 portion, effectively the rest of the row */
