@@ -7,6 +7,7 @@ const morgan = require('morgan');
 
 const passport = require('passport');
 const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -33,6 +34,7 @@ app.use(express.static('public'));
 // Parse request body
 app.use(express.json());
 passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 // Mount router on "/api"
 app.use('/v3', notesRouter);
