@@ -109,6 +109,8 @@ router.put('/tags/:id', function (req, res, next) {
 });
 
 router.delete('/tags/:id', function (req, res, next) {
+  const { id } = req.params;
+  const userId = req.user.id;
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     const error = new Error('The `id` is not valid');
@@ -116,11 +118,9 @@ router.delete('/tags/:id', function (req, res, next) {
     return next(error);
   }
 
-  const deleteTag = Tag.findByIdAndRemove({_id: req.params.id});
+  const deleteTag = Tag.findByIdAndRemove({_id: id, userId});
   // const deleteNotes = Note.deleteMany({folderId: req.params.id});
-  const resetTagId = Note.update({ $pull: { tags: {$in: [req.params.id] } } });
-
-
+  const resetTagId = Note.update({ $pull: { tags: {$in: [id, userId] } } });
 
   Promise.all([deleteTag, resetTagId])
     .then(tagResult => {
