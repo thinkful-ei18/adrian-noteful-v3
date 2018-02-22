@@ -23,6 +23,8 @@ router.get('/folders', (req, res, next) => {
 });
 
 router.get('/folders/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id;
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     const error = new Error('The `id` is not valid');
@@ -31,7 +33,7 @@ router.get('/folders/:id', (req, res, next) => {
   }
 
   return Folder
-    .findById(req.params.id)
+    .findOne({_id: id, userId})
     .select('id name')
     .then(result => {
       if (!result) {
