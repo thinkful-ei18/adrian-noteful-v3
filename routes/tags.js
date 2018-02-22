@@ -20,6 +20,9 @@ router.get('/tags', function (req, res, next) {
 });
 
 router.get('/tags/:id', function (req, res, next) {
+  const { id } = req.params;
+  const userId = req.user.id;
+
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     const error = new Error('The `id` is not valid');
     error.status = 400;
@@ -27,7 +30,7 @@ router.get('/tags/:id', function (req, res, next) {
   }
 
   return Tag
-    .findById(req.params.id)
+    .findById({_id: id, userId})
     .select('name')
     .then(result => {
       if (!result) {
