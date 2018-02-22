@@ -20,9 +20,10 @@ router.get('/notes', (req, res, next) => {
   let sort = 'created'; // We want to sort by the note's created date.
 
   // const { id } = req.params;
-  filter.id = req.params.id;
+  const userId = req.user.id;
 
-  projection.userId = req.user.id;
+  filter = { userId }; // assign filter the property AND value of userId
+
 
   if (searchTerm) {
     filter.$text = {$search: searchTerm, $language: 'none'}; // $text: $search = Options for our $text search
@@ -38,10 +39,12 @@ router.get('/notes', (req, res, next) => {
     filter.tags = tagId;
   }
 
+
+
   // Note.find({WHAT YOU'RE LOOKING FOR}, {WHAT TO RETURN});
 
   return Note.find(filter, projection)
-    .select('id title content folderId tags created')
+    .select('id userId title content folderId tags created')
     .populate('tags')
     .sort(sort)
 
@@ -72,7 +75,7 @@ router.get('/notes/:id', (req, res, next) => {
 
   Note
     .findOne({_id: id, userId})
-    .select('id title content folderId tags created')
+    .select('id userId title content folderId tags created')
     .populate('tags')
     .then(result => {
       res.json(result);
@@ -98,6 +101,7 @@ router.post('/notes', (req, res, next) => {
 
   Note
     .create({
+      userId: req.user.id,
       title: req.body.title,
       content: req.body.content,
       folderId: req.body.folderId,
