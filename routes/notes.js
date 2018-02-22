@@ -10,7 +10,6 @@ const mongoose = require('mongoose');
 
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
-  // console.log('Get All Notes');
 
   const { searchTerm, folderId, tagId } = req.query; //
   // console.log(searchTerm, folderId);
@@ -19,6 +18,11 @@ router.get('/notes', (req, res, next) => {
   let filter = {}; // 1st find argument; Criteria for filtering our results; We use the searchTerm query string
   let projection = {}; // 2nd find argument; Criteria for what we want to return
   let sort = 'created'; // We want to sort by the note's created date.
+
+  // const { id } = req.params;
+  filter.id = req.params.id;
+
+  projection.userId = req.user.id;
 
   if (searchTerm) {
     filter.$text = {$search: searchTerm, $language: 'none'}; // $text: $search = Options for our $text search
@@ -45,13 +49,6 @@ router.get('/notes', (req, res, next) => {
       res.json(results);
     })
     .catch(next);
-
-  // return Note
-  //   .find()
-  //   .then(results => {
-  //     res.status(200).json(results);
-  //   })
-  //   .catch(next);
 });
 
 /* ========== GET/READ A SINGLE ITEM ========== */
