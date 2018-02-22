@@ -2,9 +2,11 @@
 
 const mongoose = require('mongoose');
 
-const tagsSchema = new mongoose.Schema({name: {type: String, unique: true}});
+const tagsSchema = new mongoose.Schema({
+  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
+  name: {type: String, required: true}});
 
-tagsSchema.index({name: 'text'});
+tagsSchema.index({ name: 1, userId: 1}, { unique: true });
 
 tagsSchema.set('toObject', {
   transform: function (doc, ret) {
