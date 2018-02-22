@@ -9,8 +9,10 @@ const Tag = require('../models/tag');
 const Note = require('../models/note');
 
 router.get('/tags', function (req, res, next) {
+  const userId = req.user.id;
+
   return Tag
-    .find()
+    .find({ userId })
     .select('name')
     .sort('name')
     .then(results => {
@@ -47,7 +49,9 @@ router.get('/tags/:id', function (req, res, next) {
 router.post('/tags', function (req, res, next) {
 
   const { name } = req.body;
-  const newTag = { name };
+  const userId = req.user.id;
+  const newTag = { name, userId };
+
 
   if (!name) {
     const err = new Error('Missing `name` in request body');
