@@ -19,7 +19,6 @@ router.get('/notes', (req, res, next) => {
   let projection = {}; // 2nd find argument; Criteria for what we want to return
   let sort = 'created'; // We want to sort by the note's created date.
 
-  // const { id } = req.params;
   const userId = req.user.id;
 
   filter = { userId }; // assign filter the property AND value of userId
@@ -119,6 +118,7 @@ router.post('/notes', (req, res, next) => {
 router.put('/notes/:id', (req, res, next) => {
   const { id } = req.params;
   const { title, content, folderId, tags } = req.body;
+  const userId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!title) {
@@ -138,7 +138,7 @@ router.put('/notes/:id', (req, res, next) => {
   const updateItem = { title, content, folderId, tags };
   const options = { new: true };
 
-  Note.findByIdAndUpdate(id, updateItem, options)
+  Note.findByIdAndUpdate({_id: id, userId}, updateItem, options)
     .select('id title content folderId tags')
     .then(result => {
       res.json(result);
@@ -149,6 +149,9 @@ router.put('/notes/:id', (req, res, next) => {
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/notes/:id', (req, res, next) => {
 
+  const { id } = req.params;
+  const userId = req.user.id;
+
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     const error = new Error('The `id` is not valid');
     error.status = 400;
@@ -156,7 +159,7 @@ router.delete('/notes/:id', (req, res, next) => {
   }
 
   Note
-    .findByIdAndRemove(req.params.id)
+    .findByIdAndRemove({_id: id, userId})
     .then (() => {
       res.status(204).end();
     })
