@@ -79,6 +79,7 @@ router.put('/folders/:id', (req, res, next) => {
 
   const { id } = req.params;
   const { name } = req.body;
+  const userId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!name) {
@@ -97,7 +98,7 @@ router.put('/folders/:id', (req, res, next) => {
   const options = { new: true };
 
   Folder
-    .findByIdAndUpdate(id, updateItem, options)
+    .findByIdAndUpdate({_id: id, userId}, updateItem, options)
     .select('id name')
     .then(result => {
       res.json(result);
