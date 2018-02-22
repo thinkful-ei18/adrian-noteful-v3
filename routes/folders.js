@@ -10,10 +10,11 @@ const Note = require('../models/note');
 
 
 router.get('/folders', (req, res, next) => {
+  const userId = req.user.id;
 
   return Folder
-    .find()
-    .select('id name')
+    .find({ userId })
+    .select('id name userId')
     .sort('name')
     .then(results => {
       res.json(results);
@@ -34,7 +35,7 @@ router.get('/folders/:id', (req, res, next) => {
 
   return Folder
     .findOne({_id: id, userId})
-    .select('id name')
+    .select('id name userId')
     .then(result => {
       if (!result) {
         const error = new Error('`id` not found!');
@@ -49,7 +50,10 @@ router.get('/folders/:id', (req, res, next) => {
 
 router.post('/folders', (req, res, next) => {
   const { name } = req.body;
-  const newFolder = { name };
+  // const { id } = req.params;
+  const userId = req.user.id;
+
+  const newFolder = { name, userId };
 
   if (!name) {
     const err = new Error('Missing `name` in request body');
