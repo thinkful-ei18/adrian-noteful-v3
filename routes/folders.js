@@ -113,6 +113,8 @@ router.put('/folders/:id', (req, res, next) => {
 });
 
 router.delete('/folders/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id;
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     const error = new Error('The `id` is not valid');
@@ -120,9 +122,9 @@ router.delete('/folders/:id', (req, res, next) => {
     return next(error);
   }
 
-  const deleteFolder = Folder.findByIdAndRemove({_id:req.params.id});
-  // const deleteNotes = Note.deleteMany({folderId: req.params.id});
-  const resetFolderId = Note.update({folderId: req.params.id}, {$set: {folderId: null}});
+  const deleteFolder = Folder.findByIdAndRemove({_id: id, userId});
+  // const deleteNotes = Note.deleteMany({folderId: id, userId});
+  const resetFolderId = Note.update({folderId: id, userId}, {$set: {folderId: null}});
 
 
   Promise.all([deleteFolder, resetFolderId])
