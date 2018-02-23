@@ -33,3 +33,7 @@ afterEach(function () {
 after(function () {
   return mongoose.disconnect();
 });
+
+describe('Local Auth Test', function () {
+
+});
