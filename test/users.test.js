@@ -11,6 +11,10 @@ chai.use(chaiSpies);
 
 const mongoose = require('mongoose');
 const { TEST_MONGODB_URI } = require('../config');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET} = require('../config');
+
+
 const User = require('../models/user');
 
 const fullname = 'Example User';
@@ -35,5 +39,20 @@ after(function () {
 });
 
 describe('Local Auth Test', function () {
+
+  it('Should return a valid auth token', function () {
+    return chai.request(app)
+      .post('/v3/login')
+      .send({ username, password })
+      .then(res => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        const token = res.body.authToken;
+        expect(token).to.be.a('string');
+        const payload = jwt.verify(token, JWT_SECRET, { algorithm: ['HS256'] });
+        expect(payload.user).to.deep.equal({ username, fullname });
+      });
+  });
+
 
 });
